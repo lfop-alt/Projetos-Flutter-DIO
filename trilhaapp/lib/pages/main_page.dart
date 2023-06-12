@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:trilhaapp/pages/dados_cadastrais.dart';
 import 'package:trilhaapp/pages/login_page.dart';
 import 'package:trilhaapp/pages/pagina1.dart';
 import 'package:trilhaapp/pages/pagina2.dart';
@@ -52,19 +53,41 @@ class _MainPageState extends State<MainPage> {
                   height: 20,
                 ),
                 InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (context) =>
-                                  const perfilDeUsuarioPage()));
-                    },
-                    child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        child: const Text("Perfil",
-                            style: TextStyle(fontSize: 20)))),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (context) => const perfilDeUsuarioPage()));
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    child: const Text(
+                      "Perfil",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => const DadosCadastraisPage(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    child: const Text(
+                      "Cadastrar",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ),
                 InkWell(
                     onTap: () {},
                     child: Container(

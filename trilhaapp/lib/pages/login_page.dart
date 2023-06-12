@@ -102,8 +102,8 @@ class _LoginPageState extends State<LoginPage> {
                   height: 50,
                   child: TextButton(
                     onPressed: () {
-                      emailController.text.trim() == "teste@teste.com" &&
-                              passwordController.text.trim() == "123"
+                      emailController.text.trim() == "t" &&
+                              passwordController.text.trim() == "1"
                           ? Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
