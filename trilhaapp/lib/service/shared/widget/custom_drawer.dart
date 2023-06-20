@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:trilhaapp/pages/configuracoes.dart';
 
 import '../../../pages/dados_cadastrais.dart';
 import '../../../pages/login_page.dart';
@@ -127,7 +128,14 @@ class CustonDrawer extends StatelessWidget {
                     style: TextStyle(fontSize: 20)),
               )),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const COnfiguracoesPage(),
+                  ));
+            },
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),

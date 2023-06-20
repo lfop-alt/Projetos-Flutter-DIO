@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:trilhaapp/model/tarefas.dart';
-import 'package:trilhaapp/repositories/tarefa_repository.dart';
+
+import '../model/tarefa_model_sqlite.dart';
+import '../repositories/tarefa_sqlite.dart';
 
 class TarefasPage extends StatefulWidget {
   const TarefasPage({super.key});
@@ -11,8 +12,9 @@ class TarefasPage extends StatefulWidget {
 
 class _TarefasPageState extends State<TarefasPage> {
   TextEditingController descricaoController = TextEditingController();
-  TarefaRepository tarefaRepository = TarefaRepository();
-  var _tarefas = const <Tarefas>[];
+
+  TarefaSQLiteRepository tarefaSQLiteRepository = TarefaSQLiteRepository();
+  var _tarefas = const <TarefaModelSLite>[];
   var naoConcluidos = false;
 
   @override
@@ -22,11 +24,7 @@ class _TarefasPageState extends State<TarefasPage> {
   }
 
   void getTarefas() async {
-    if (naoConcluidos) {
-      _tarefas = await tarefaRepository.listarTarefasNaoConcluidas();
-    } else {
-      _tarefas = await tarefaRepository.listarTarefas();
-    }
+    _tarefas = await tarefaSQLiteRepository.obterDados(naoConcluidos);
 
     setState(() {});
   }
@@ -55,9 +53,10 @@ class _TarefasPageState extends State<TarefasPage> {
                   ),
                   TextButton(
                       onPressed: () async {
-                        await tarefaRepository.adicionar(
-                            Tarefas(descricaoController.text, false));
+                        await tarefaSQLiteRepository.salvar(TarefaModelSLite(
+                            0, descricaoController.text, false));
                         Navigator.pop(context);
+                        getTarefas();
                         setState(() {});
                       },
                       child: const Text("Salvar"))
@@ -72,20 +71,18 @@ class _TarefasPageState extends State<TarefasPage> {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Column(
           children: [
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text("Apenas não concluidos"),
-                  Switch(
-                    value: false,
-                    onChanged: (value) {
-                      naoConcluidos = value;
-                      getTarefas();
-                    },
-                  )
-                ],
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text("Apenas não concluidos"),
+                Switch(
+                  value: naoConcluidos,
+                  onChanged: (value) {
+                    naoConcluidos = value;
+                    getTarefas();
+                  },
+                )
+              ],
             ),
             Expanded(
               child: ListView.builder(
@@ -93,9 +90,9 @@ class _TarefasPageState extends State<TarefasPage> {
                 itemBuilder: (context, index) {
                   var tarefaG = _tarefas[index];
                   return Dismissible(
-                    key: Key(tarefaG.id),
+                    key: Key(tarefaG.descricao),
                     onDismissed: (direction) async {
-                      await tarefaRepository.removeTarefas(tarefaG.id);
+                      tarefaSQLiteRepository.remover(tarefaG.id);
                       getTarefas();
                     },
                     child: ListTile(
@@ -103,7 +100,8 @@ class _TarefasPageState extends State<TarefasPage> {
                       trailing: Switch(
                         value: tarefaG.concluido,
                         onChanged: (value) async {
-                          await tarefaRepository.alterar(tarefaG.id, value);
+                          tarefaG.concluido = value;
+                          tarefaSQLiteRepository.update(tarefaG);
                           getTarefas();
                         },
                       ),
